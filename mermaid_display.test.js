@@ -40,6 +40,12 @@ test("block split across flushes is rendered", () => {
   expect(shown.endsWith("┘\n```\nafter\n")).toBe(true);
 });
 
+test("fullwidth labels keep box borders aligned", () => {
+  expect(run(["```mermaid\ngraph LR\n  A[中文] --> B\n```\n"])).toBe(
+    "```\n┌──────┐   ┌───┐\n│ 中文 ├──►│ B │\n└──────┘   └───┘\n```\n",
+  );
+});
+
 test("invalid diagram is shown raw", () => {
   expect(run(["```mermaid\ngraph TD; A-->\n```\n"])).toBe("```mermaid\ngraph TD; A-->\n```\n");
 });
