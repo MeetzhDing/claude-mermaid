@@ -17,10 +17,11 @@ function terminalWidth() {
     const tty = new WriteStream(openSync("/dev/tty", "w"));
     const { columns } = tty;
     tty.destroy();
-    return columns || Infinity;
-  } catch {
-    return Infinity;
-  }
+    if (columns) return columns;
+  } catch {}
+  // No terminal to measure in the desktop app or an IDE panel, and the pane
+  // may be narrow, so assume a classic terminal instead of unlimited width.
+  return Number(process.env.COLUMNS) || 80;
 }
 
 async function render(block, closeFence) {
